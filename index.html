@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Digital Clock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', monospace;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+        }
+
+        .clock-container {
+            background: #2d2d2d;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .clock-container:active {
+            transform: scale(0.98);
+        }
+
+        .time {
+            color: #fff;
+            font-size: 4.5em;
+            font-weight: 300;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .dots {
+            animation: blink 1s infinite;
+        }
+
+        .date {
+            color: #a6a6a6;
+            font-size: 1.2em;
+            text-align: center;
+            margin-top: 15px;
+            letter-spacing: 1px;
+        }
+
+        .decorations {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #ff9500;
+            border-radius: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @media (max-width: 480px) {
+            .clock-container {
+                padding: 25px 30px;
+                margin: 15px;
+            }
+            
+            .time {
+                font-size: 3.5em;
+            }
+            
+            .date {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="decorations"></div>
+        <div class="time">
+            <span class="hours">00</span>
+            <span class="dots">:</span>
+            <span class="minutes">00</span>
+            <span class="dots">:</span>
+            <span class="seconds">00</span>
+        </div>
+        <div class="date">понедельник, 1 января 2024</div>
+    </div>
+
+    <script>
+        class DigitalClock {
+            constructor() {
+                this.timeElements = {
+                    hours: document.querySelector('.hours'),
+                    minutes: document.querySelector('.minutes'),
+                    seconds: document.querySelector('.seconds'),
+                    date: document.querySelector('.date')
+                };
+                
+                this.months = [
+                    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+                ];
+                
+                this.days = [
+                    'воскресенье', 'понедельник', 'вторник', 'среда',
+                    'четверг', 'пятница', 'суббота'
+                ];
+
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000);
+            }
+
+            formatNumber(num) {
+                return num < 10 ? `0${num}` : num;
+            }
+
+            updateTime() {
+                const now = new Date();
+                
+                this.timeElements.hours.textContent = this.formatNumber(now.getHours());
+                this.timeElements.minutes.textContent = this.formatNumber(now.getMinutes());
+                this.timeElements.seconds.textContent = this.formatNumber(now.getSeconds());
+                
+                this.timeElements.date.textContent = `
+                    ${this.days[now.getDay()]}, 
+                    ${now.getDate()} ${this.months[now.getMonth()]} 
+                    ${now.getFullYear()}
+                `.replace(/\s+/g, ' ');
+            }
+        }
+
+        // Инициализация часов
+        new DigitalClock();
+    </script>
+</body>
+</html>
